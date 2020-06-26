@@ -9,7 +9,6 @@ public class Server {
     Socket client_socket;
     RunList list = new RunList();
     private int port;
-    private int client_id;
 
     public Server(int a_port){
         this.port = a_port;

@@ -1,11 +1,14 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class RunList {
+public class RunList implements Serializable {
 
     private ArrayList<Run> list;
 
-    public synchronized ArrayList<Run> getList() {
-        return list;
+    public synchronized ArrayList<Run> getcopy() {
+        ArrayList<Run> r_list = new ArrayList<>();
+        r_list.addAll(list);
+        return r_list;
     }
 
     public RunList(){
@@ -24,14 +27,22 @@ public class RunList {
         list.clear();
     }
 
+    public synchronized ArrayList<Run> show(){
+        ArrayList<Run> rl = new ArrayList<>();
+        for (Run run : list) {
+            Run r = new Run();
+            r.setDate(run.getDate());
+            r.setLength(run.getLength());
+            r.setTime(run.getTime());
+            rl.add(r);
+        }
+        return rl;
+    }
+
     @Override
     public String toString() {
-        String r;
-        r = "START";
-        for (Run run : list){
-            r = "DATE: " + run.getDate() + " LENGTH: " + run.getLength() +" TIME: " + run.getTime();;
-        }
-        r = "FINISH";
-        return r;
+        return "RunList{" +
+                "list=" + list +
+                '}';
     }
 }

@@ -1,23 +1,23 @@
 import java.io.Serializable;
 
 public class Run implements Serializable, Comparable<Run> {
-    private int length;
-    private int time;
+    private String length;
+    private String time;
     private String date;
 
-    public int getLength() {
+    public String getLength() {
         return length;
     }
 
-    public void setLength(int length) {
+    public void setLength(String length) {
         this.length = length;
     }
 
-    public int getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -36,7 +36,13 @@ public class Run implements Serializable, Comparable<Run> {
 
     @Override
     public int compareTo(Run r) {
-        if (date == r.getDate() && length == r.getLength() && time == r.getTime()) return 0;
-        else return -1;
+        int x1 = date.compareTo(r.getDate());
+        //int x3 = length.compareTo(r.getLength());
+        int x2 = time.compareTo(r.getTime());
+       if(x1 == 0 && x2 == 0){
+           return 0;
+       } else {
+           return -1;
+       }
     }
 }

@@ -37,14 +37,14 @@ public class Client {
             String message_to_server;
             String message_from_server;
             String date;
-            int length;
-            int time;
+            String length;
+            String time;
             boolean go = true;
             int c;
-
+            //System.out.println("Welcome to YouRun");
             while (go){
 
-                System.out.println("Welcome to YouRun");
+                //System.out.println("Welcome to YouRun");
                 System.out.println("Choose one of the following options:");
                 System.out.println("   (0) -> Quit connection with server");
                 System.out.println("   (1) -> Add a run");
@@ -66,15 +66,22 @@ public class Client {
                         break;
                     case 1:
                         //add
-                        //user_scanner.useDelimiter("\\s*\n\\s*"); //il delimitatore sarà uno o più spazi seguito da un ritorno a capo
-                        System.out.println("Insert date: ");
-                        date = user_scanner.nextLine();
-                        System.out.println("Insert length: ");
-                        length = user_scanner.nextInt();
-                        System.out.println("Insert time: ");
-                        time = user_scanner.nextInt();
+                        message_to_server = "ADD";
+                        pw.println(message_to_server);
+                        pw.flush();
 
-                        message_to_server = "ADD"+" ' "+date+" ' "+length+" ' "+time;
+                        user_scanner.useDelimiter("\\s*\n\\s*"); //il delimitatore sarà uno o più spazi seguito da un ritorno a capo
+                        System.out.println("Insert date: ");
+                        date = user_scanner.next();
+                        System.out.println("Insert length with its unit of measurement: ");
+                        length = user_scanner.next();
+                        System.out.println("Insert time with its unit of measurement: ");
+                        time = user_scanner.next();
+
+                        //System.out.println(">>> Sending "+date+length+time);
+                        //message_to_server = "ADD"+"*"+date+"**"+length+"***"+time+"****";
+
+                        message_to_server = date+"*"+length+"|"+time+"-";
                         pw.println(message_to_server);
                         pw.flush();
 
@@ -89,22 +96,27 @@ public class Client {
 
                     case 2:
                         //remove
+                        message_to_server = "REMOVE";
+                        pw.println(message_to_server);
+                        pw.flush();
+
+                        user_scanner.useDelimiter("\\s*\n\\s*");
                         System.out.println("Insert date: ");
                         date = user_scanner.next();
                         System.out.println("Insert length: ");
-                        length = user_scanner.nextInt();
+                        length = user_scanner.next();
                         System.out.println("Insert time: ");
-                        time = user_scanner.nextInt();
+                        time = user_scanner.next();
 
-                        message_to_server = "REMOVE"+" ' "+date+" ' "+length+" ' "+time;
+                        //message_to_server = "REMOVE"+" ' "+date+" ' "+length+" ' "+time;
+
+                        message_to_server = date+"*"+length+"|"+time+"-";
                         pw.println(message_to_server);
                         pw.flush();
 
                         message_from_server = server_scanner.nextLine();
                         if(message_from_server.equals("REMOVE_CORRECTLY")){
                             System.out.println("The run has been removed");
-                        } else if(message_from_server.equals("REMOVE_NOT_CORRECTLY")){
-                            System.out.println("The run doesn't exist");
                         } else {
                             System.out.println("UNKNOWN ERROR -> "+message_from_server);
                         }
@@ -124,6 +136,7 @@ public class Client {
                                 message_from_server = server_scanner.nextLine();
                                 if (message_from_server.equals("FINISH")){
                                     show = false;
+                                    //System.out.println("List ended");
                                 } else {
                                     System.out.println(message_from_server);
                                 }
@@ -133,10 +146,15 @@ public class Client {
                         break;
                     case 4:
                         //save
+                        user_scanner.useDelimiter("\\s*\n\\s*");
                         System.out.println("Insert name of the file txt: ");
-                        String file_name = user_scanner.nextLine();
+                        String file_name = user_scanner.next();
 
-                        message_to_server = "SAVE "+file_name;
+                        message_to_server = "SAVE";
+                        pw.println(message_to_server);
+                        pw.flush();
+
+                        message_to_server = file_name;
                         pw.println(message_to_server);
                         pw.flush();
 
@@ -156,7 +174,7 @@ public class Client {
 
                         message_from_server = server_scanner.nextLine();
                         if(message_from_server.equals("CLEAR_CORRECTLY")){
-                            System.out.println("The run has been cleared");
+                            System.out.println("The list has been cleared");
                         } else {
                             System.out.println("UNKNOWN ERROR -> "+message_from_server);
                         }
