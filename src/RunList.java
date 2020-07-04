@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -14,6 +15,7 @@ public class RunList implements Serializable {
     public RunList(){
         list = new ArrayList<Run>();
     }
+
 
     public synchronized void add(Run r){
         list.add(r);

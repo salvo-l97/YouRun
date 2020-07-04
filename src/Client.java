@@ -39,6 +39,8 @@ public class Client {
             String date;
             String length;
             String time;
+            String file_name;
+            String file_code;
             boolean go = true;
             int c;
             //System.out.println("Welcome to YouRun");
@@ -51,7 +53,8 @@ public class Client {
                 System.out.println("   (2) -> Remove a run");
                 System.out.println("   (3) -> Show the list");
                 System.out.println("   (4) -> Create a file txt and save list");
-                System.out.println("   (5) -> Clear the list");
+                System.out.println("   (5) -> Load list from a file txt");
+                System.out.println("   (6) -> Clear the list");
                 System.out.println("Type your choice -> ");
                 c = user_scanner.nextInt();
 
@@ -78,8 +81,6 @@ public class Client {
                         System.out.println("Insert time with its unit of measurement: ");
                         time = user_scanner.next();
 
-                        //System.out.println(">>> Sending "+date+length+time);
-                        //message_to_server = "ADD"+"*"+date+"**"+length+"***"+time+"****";
 
                         message_to_server = date+"*"+length+"|"+time+"-";
                         pw.println(message_to_server);
@@ -117,6 +118,8 @@ public class Client {
                         message_from_server = server_scanner.nextLine();
                         if(message_from_server.equals("REMOVE_CORRECTLY")){
                             System.out.println("The run has been removed");
+                        } else if(message_from_server.equals("REMOVE_NOT_CORRECTLY")){
+                            System.out.println("The run doesen't exist");
                         } else {
                             System.out.println("UNKNOWN ERROR -> "+message_from_server);
                         }
@@ -141,6 +144,8 @@ public class Client {
                                     System.out.println(message_from_server);
                                 }
                             }
+                        } else {
+                            System.out.println("UNKNOWN ERROR -> "+message_from_server);
                         }
 
                         break;
@@ -148,13 +153,20 @@ public class Client {
                         //save
                         user_scanner.useDelimiter("\\s*\n\\s*");
                         System.out.println("Insert name of the file txt: ");
-                        String file_name = user_scanner.next();
+                        file_name = user_scanner.next();
+
+                        System.out.println("Insert code to create the file txt: ");
+                        file_code = user_scanner.next();
 
                         message_to_server = "SAVE";
                         pw.println(message_to_server);
                         pw.flush();
 
                         message_to_server = file_name;
+                        pw.println(message_to_server);
+                        pw.flush();
+
+                        message_to_server = file_code;
                         pw.println(message_to_server);
                         pw.flush();
 
@@ -169,6 +181,45 @@ public class Client {
                         break;
 
                     case 5:
+                        user_scanner.useDelimiter("\\s*\n\\s*");
+                        System.out.println("Insert name of the file txt: ");
+                        file_name = user_scanner.next();
+
+                        System.out.println("Insert code of the file txt: ");
+                        file_code = user_scanner.next();
+
+                        message_to_server = "LOAD";
+                        pw.println(message_to_server);
+                        pw.flush();
+
+                        message_to_server = file_name;
+                        pw.println(message_to_server);
+                        pw.flush();
+
+                        message_to_server = file_code;
+                        pw.println(message_to_server);
+                        pw.flush();
+
+                        message_from_server = server_scanner.nextLine();
+                        boolean load_list = true;
+
+                        if (message_from_server.equals("START")) {
+                            System.out.println(file_name + " content:");
+                            while (load_list) {
+                                message_from_server = server_scanner.nextLine();
+                                if (message_from_server.equals("FINISH")) {
+                                    load_list = false;
+                                } else {
+                                    System.out.println(message_from_server);
+                                }
+                            }
+                        } else {
+                            System.out.println("Error loading file -> "+message_from_server);
+                        }
+
+                        break;
+
+                    case 6:
                         pw.println("CLEAR");
                         pw.flush();
 
@@ -194,5 +245,9 @@ public class Client {
         }
 
     }
+
+    /*public void login() {
+
+    }*/
 
 }

@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -7,8 +9,9 @@ public class Server {
 
     ServerSocket server_socket;
     Socket client_socket;
-    RunList list = new RunList();
+    //RunList list = new RunList();
     private int port;
+    //File f_code = new File("code.ser");
 
     public Server(int a_port){
         this.port = a_port;
@@ -36,6 +39,7 @@ public class Server {
                 client_socket = server_socket.accept();
                 System.out.println(">>> Server accepted connection from "+client_socket.getRemoteSocketAddress());
 
+                RunList list = new RunList();
                 ClientManager cm = new ClientManager(client_socket,list);
                 Thread t = new Thread(cm);
                 t.start();

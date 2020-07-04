@@ -37,12 +37,25 @@ public class Run implements Serializable, Comparable<Run> {
     @Override
     public int compareTo(Run r) {
         int x1 = date.compareTo(r.getDate());
-        //int x3 = length.compareTo(r.getLength());
+        int x3 = length.compareTo(r.getLength());
         int x2 = time.compareTo(r.getTime());
-       if(x1 == 0 && x2 == 0){
+       if(x1 == 0 && x2 == 0 && x3 == 0){
            return 0;
        } else {
            return -1;
        }
+       /*if (x1 == 0){
+           if (x2 == 0){
+               if(x3 == 0){
+                   return 0;
+               } else {
+                   return 1;
+               }
+           } else {
+               return -2;
+           }
+       } else {
+           return -1;
+       }*/
     }
 }
