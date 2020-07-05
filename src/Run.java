@@ -44,18 +44,5 @@ public class Run implements Serializable, Comparable<Run> {
        } else {
            return -1;
        }
-       /*if (x1 == 0){
-           if (x2 == 0){
-               if(x3 == 0){
-                   return 0;
-               } else {
-                   return 1;
-               }
-           } else {
-               return -2;
-           }
-       } else {
-           return -1;
-       }*/
     }
 }

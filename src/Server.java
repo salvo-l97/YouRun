@@ -13,6 +13,16 @@ public class Server {
     private int port;
     //File f_code = new File("code.ser");
 
+   /* FileWriter code_file;
+
+    {
+        try {
+            code_file = new FileWriter("codes.ser",true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
+
     public Server(int a_port){
         this.port = a_port;
     }

@@ -1,10 +1,13 @@
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class RunList implements Serializable {
 
     private ArrayList<Run> list;
+    //private FileWriter fileWriter;
 
     public synchronized ArrayList<Run> getcopy() {
         ArrayList<Run> r_list = new ArrayList<>();
@@ -14,6 +17,11 @@ public class RunList implements Serializable {
 
     public RunList(){
         list = new ArrayList<Run>();
+       /* try {
+            fileWriter = new FileWriter("codes.ser",true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 
 
@@ -40,6 +48,7 @@ public class RunList implements Serializable {
         }
         return rl;
     }
+
 
     @Override
     public String toString() {

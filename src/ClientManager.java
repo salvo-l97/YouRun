@@ -7,10 +7,12 @@ public class ClientManager implements Runnable {
 
     private Socket client_socket;
     private RunList runList;
+    //private FileWriter fw;
 
     public ClientManager(Socket socket, RunList list){
         client_socket = socket;
         this.runList = list;
+        //this.fw = fw;
     }
 
     @Override
@@ -37,16 +39,18 @@ public class ClientManager implements Runnable {
         String file_name;
         String file_code;
         String message_to_client;
+
         //File f_code = new File("codes.ser");
         //if (f_code.createNewFile()){}
-        FileWriter fw_code = null;
+        /*FileWriter fw_code = null;
         //PrintWriter pw_code = null;
         try {
             fw_code = new FileWriter("codes.ser", true);
             //pw_code = new PrintWriter((fw_code));
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+
 
         boolean go = true;
         while (go){
@@ -163,13 +167,21 @@ public class ClientManager implements Runnable {
                 file_name = client_scanner.next();
                 file_code = client_scanner.next();
 
-                //FileWriter fw_code = new FileWriter(f_code);
+                FileWriter fw_code = null;
                 try {
-                    fw_code.write(file_name + " " + file_code + "\r\n");
-                    fw_code.close();
+                    fw_code = new FileWriter("codes.ser",true);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                try {
+                    fw_code.write(file_name + " " + file_code + "\n");
+                    //fw.flush();
+                    fw_code.close();
+                } catch (IOException e) {
+                    System.out.println(">>> ERRORE QUANDO SI SCRIVE SUL FILE codes.ser");
+                    e.printStackTrace();
+                }
+
 
 
                 try {
@@ -181,7 +193,6 @@ public class ClientManager implements Runnable {
                     for (Run r : r_tmp){
                         fw.write("Date: " + r.getDate() + ", Length: " + r.getLength() + ", Time: " + r.getTime() + "\n");
                     }
-                    fw.flush();
                     fw.close();
 
                     pw.println("SAVE_CORRECTLY");
