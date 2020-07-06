@@ -32,6 +32,11 @@ public class ClientManager implements Runnable {
 
         String verifica = null;
         String verifica_file = null;
+        String verifica1 = null;
+        String filevuoto = null;
+        String s = null;
+
+        int i = 0;
 
         String date;
         String length;
@@ -133,8 +138,9 @@ public class ClientManager implements Runnable {
                         verifica = "REMOVE_NOT_CORRECTLY";
                     }
                 }
-                System.out.println(">>> " + verifica);
+                //System.out.println(">>> " + verifica);
                 if (verifica.equals("REMOVE_CORRECTLY")){
+                    System.out.println(">>> Removed successfully -> "+r);
                     pw.println(verifica);
                     pw.flush();
                 } else {
@@ -167,41 +173,122 @@ public class ClientManager implements Runnable {
                 file_name = client_scanner.next();
                 file_code = client_scanner.next();
 
+                File f = new File("codes.ser");
+
+                try {
+                    if(f.createNewFile()){
+                        filevuoto = "CREATE";
+                    } else {
+                        filevuoto = "NOT_CREATE";
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
                 FileWriter fw_code = null;
                 try {
-                    fw_code = new FileWriter("codes.ser",true);
+                    fw_code = new FileWriter(f,true);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                try {
-                    fw_code.write(file_name + " " + file_code + "\n");
-                    //fw.flush();
-                    fw_code.close();
-                } catch (IOException e) {
-                    System.out.println(">>> ERRORE QUANDO SI SCRIVE SUL FILE codes.ser");
-                    e.printStackTrace();
-                }
+
+                //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " +filevuoto);
 
 
+                /*if(filevuoto.equals("CREATE")){
+                    verifica1 = "NOT_EXIST";
+                } else {
+                    verifica1 = "MAYBE_EXIST";
+                }*/
 
-                try {
-                    FileWriter fw = new FileWriter(file_name);
-
-                    ArrayList<Run> r_tmp;
-                    r_tmp = runList.show();
-
-                    for (Run r : r_tmp){
-                        fw.write("Date: " + r.getDate() + ", Length: " + r.getLength() + ", Time: " + r.getTime() + "\n");
+                if(filevuoto.equals("CREATE")){
+                    //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IL FILE E' VUOTO QUINDI SALVO IL PRIMO FILE CHE STO CREANDO" );
+                    try {
+                        fw_code.write(file_name + " " + file_code + "\n");
+                        //fw.flush();
+                        fw_code.close();
+                    } catch (IOException e) {
+                        System.out.println(">>> ERRORE QUANDO SI SCRIVE SUL FILE codes.ser");
+                        e.printStackTrace();
                     }
-                    fw.close();
 
-                    pw.println("SAVE_CORRECTLY");
-                    pw.flush();
-                } catch (IOException e) {
-                    pw.println("SAVE_NOT_CORRECTLY");
-                    pw.flush();
-                    e.printStackTrace();
+                    try {
+                        FileWriter fw = new FileWriter(file_name);
+                        ArrayList<Run> r_tmp;
+                        r_tmp = runList.show();
+                        for (Run r : r_tmp) {
+                            fw.write("Date: " + r.getDate() + ", Length: " + r.getLength() + ", Time: " + r.getTime() + "\n");
+                        }
+                        fw.close();
+                        pw.println("SAVE_CORRECTLY");
+                        pw.flush();
+                    } catch (IOException e) {
+                        pw.println("SAVE_NOT_CORRECTLY");
+                        pw.flush();
+                        e.printStackTrace();
+                    }
+                } else {
+                    //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IL FILE NON >E' STATO APPENA CREATO DUNQUE DEVO VEDERE SE IL FILE CHE VOGLIO CREARE GIA' ESISTE");
+
+                    Scanner sc = null;
+                    try {
+                        sc = new Scanner(new FileReader(f));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> INIZIO A CERCARE DENTRO codes.ser");
+                    while(sc.hasNextLine()){
+                        String finfo = sc.nextLine();
+                        Scanner sc1 = new Scanner(finfo);
+                        String nome = sc1.next();
+                        if(file_name.equals(nome)){
+                            verifica_file = "EXIST";
+                            break;
+                        } else {
+                            verifica_file = "FILE_NO_EXIST";
+                        }
+                    }
+                    if(verifica_file.equals("FILE_NO_EXIST")) {
+                        //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NON HO TROVATO IL FILE DENTRO codes.ser DUNQUE LO POSSO CREARE E SALVARE");
+                        try {
+                            fw_code.write(file_name + " " + file_code + "\n");
+                            //fw.flush();
+                            fw_code.close();
+                        } catch (IOException e) {
+                            System.out.println(">>> ERRORE QUANDO SI SCRIVE SUL FILE codes.ser");
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            FileWriter fw = new FileWriter(file_name);
+                            ArrayList<Run> r_tmp;
+                            r_tmp = runList.show();
+                            for (Run r : r_tmp) {
+                                fw.write("Date: " + r.getDate() + ", Length: " + r.getLength() + ", Time: " + r.getTime() + "\n");
+                            }
+                            fw.close();
+                            pw.println("SAVE_CORRECTLY");
+                            pw.flush();
+                        } catch (IOException e) {
+                            pw.println("SAVE_NOT_CORRECTLY");
+                            pw.flush();
+                            e.printStackTrace();
+                        }
+                    } else {
+                        //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IL FILE ESISTE E NON SI PUO' CREARE");
+                        pw.println("NO");
+                        pw.flush();
+                    }
                 }
+
+
+                //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FORSE DA QUA IN POI ERROREEEEEEEEEEEE");
+
+                /*if(verifica_file.equals("FILE_NO_EXIST") || verifica1.equals("NOT_EXIST"))*/
+
+
             } else if(command.equals("LOAD")){
                 System.out.println(">>> Executing -> LOAD");
                 file_name = client_scanner.next();
@@ -267,7 +354,7 @@ public class ClientManager implements Runnable {
                     }
                 }
 
-                System.out.println(">>> " + verifica_file);
+                //System.out.println(">>> " + verifica_file);
 
                 if (verifica_file.equals("FILE_EXIST")){
                     Scanner file_scanner = null;

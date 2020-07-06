@@ -175,7 +175,10 @@ public class Client {
                             System.out.println("The list has been saved");
                         } else if(message_from_server.equals("SAVE_NOT_CORRECTLY")){
                             System.out.println("The list wasn't saved");
-                        } else {
+                        } else if(message_from_server.equals("NO")){
+                            System.out.println("File "+ file_name+" already exist");
+                        }
+                        else {
                             System.out.println("UNKNOWN ERROR -> "+message_from_server);
                         }
                         break;
