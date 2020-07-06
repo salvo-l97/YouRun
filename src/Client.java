@@ -216,7 +216,10 @@ public class Client {
                                     System.out.println(message_from_server);
                                 }
                             }
-                        } else {
+                        } else if(message_from_server.equals("NOT_EXIST")){
+                            System.out.println("File " + file_name + " has not been yet created");
+                        }
+                        else {
                             System.out.println("Error loading file -> "+message_from_server);
                         }
 

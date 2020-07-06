@@ -187,13 +187,13 @@ public class ClientManager implements Runnable {
 
 
 
+
                 FileWriter fw_code = null;
                 try {
                     fw_code = new FileWriter(f,true);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
                 //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " +filevuoto);
 
 
@@ -294,12 +294,6 @@ public class ClientManager implements Runnable {
                 file_name = client_scanner.next();
                 file_code = client_scanner.next();
 
-                Scanner f_code_scanner = null;
-                try {
-                    f_code_scanner = new Scanner(new FileReader("codes.ser"));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
 
                 /*while (f_code_scanner.hasNextLine()) {
                     String info_file = f_code_scanner.nextLine();
@@ -341,43 +335,56 @@ public class ClientManager implements Runnable {
                         }
                     }
                 }*/
-                while (f_code_scanner.hasNextLine()) {
-                    String info_file = f_code_scanner.nextLine();
-                    Scanner s_info_file = new Scanner(info_file);
-                    String nomefile = s_info_file.next();
-                    String codefile = s_info_file.next();
-                    if (nomefile.equals(file_name) && codefile.equals(file_code)) {
-                        verifica_file = "FILE_EXIST";
-                        break;
-                    } else {
-                        verifica_file = "FILE_NOT_EXIST";
-                    }
-                }
 
-                //System.out.println(">>> " + verifica_file);
-
-                if (verifica_file.equals("FILE_EXIST")){
-                    Scanner file_scanner = null;
+                File f = new File("codes.ser");
+                if(f.exists()) {
+                    Scanner f_code_scanner = null;
                     try {
-                        file_scanner = new Scanner(new FileReader(file_name));
+                        f_code_scanner = new Scanner(new FileReader("codes.ser"));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-                    System.out.println(">>> Reading from: " + file_name);
+                    while (f_code_scanner.hasNextLine()) {
+                        String info_file = f_code_scanner.nextLine();
+                        Scanner s_info_file = new Scanner(info_file);
+                        String nomefile = s_info_file.next();
+                        String codefile = s_info_file.next();
+                        if (nomefile.equals(file_name) && codefile.equals(file_code)) {
+                            verifica_file = "FILE_EXIST";
+                            break;
+                        } else {
+                            verifica_file = "FILE_NOT_EXIST";
+                        }
+                    }
 
-                    pw.println("START");
-                    pw.flush();
+                    //System.out.println(">>> " + verifica_file);
 
-                    while (file_scanner.hasNextLine()) {
-                        message_to_client = file_scanner.nextLine();
-                        System.out.println(">>> Loading: " + message_to_client);
-                        pw.println(message_to_client);
+                    if (verifica_file.equals("FILE_EXIST")) {
+                        Scanner file_scanner = null;
+                        try {
+                            file_scanner = new Scanner(new FileReader(file_name));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println(">>> Reading from: " + file_name);
+
+                        pw.println("START");
+                        pw.flush();
+
+                        while (file_scanner.hasNextLine()) {
+                            message_to_client = file_scanner.nextLine();
+                            System.out.println(">>> Loading: " + message_to_client);
+                            pw.println(message_to_client);
+                            pw.flush();
+                        }
+                        pw.println("FINISH");
+                        pw.flush();
+                    } else {
+                        pw.println("File doesn't exist");
                         pw.flush();
                     }
-                    pw.println("FINISH");
-                    pw.flush();
                 } else {
-                    pw.println("File doesn't exist");
+                    pw.println("NOT_EXIST");
                     pw.flush();
                 }
 
